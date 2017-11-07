@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<script>
+    var body = document.getElementsByTagName('body')[0];
+    ImgLunBo();
+
+    function ImgLunBo() {
+        var screen = document.createElement('div');
+        screen.style.width = '720px';
+        screen.style.height = '450px';
+        screen.style.position = 'relative';
+        screen.style.margin = '100px auto';
+        screen.style.border = '1px solid red';
+        screen.style.zIndex = '1';
+        screen.style.overflow = 'hidden';
+
+        var elemUl = document.createElement('ul');
+        elemUl.style.listStyle = 'none';
+        elemUl.style.width = '510%';
+        elemUl.style.height = screen.style.height;
+        elemUl.style.position = 'absolute';
+        elemUl.style.margin = '0px';
+        elemUl.style.padding = '0px';
+        screen.appendChild(elemUl);
+        body.appendChild(screen);
+        var elemOl = document.createElement('ol');
+        elemOl.style.listStyle = 'none';
+        elemOl.style.bottom = '10px';
+        elemOl.style.left = '50%';
+        elemOl.style.transform = 'translateX(-50%)'
+        elemOl.style.margin = '0px';
+        elemOl.style.padding = '0px';
+        elemOl.style.position = 'absolute';
+        elemOl.style.zIndex = 10;
+        screen.appendChild(elemOl);
+
+        var spanRight = document.createElement('span');
+        var spanLeft = document.createElement('span');
+        spanRight.style.position = 'absolute';
+        spanRight.style.right = '0px';
+        spanRight.style.height = '80px';
+        spanRight.style.width = '40px';
+        spanRight.style.top = '50%';
+        spanRight.style.transform = 'translateY(-50%)'
+        spanRight.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        spanRight.style.zIndex = '10';
+        spanRight.style.display = 'none';
+        spanRight.innerHTML = '>';
+        spanRight.style.color = 'white';
+        spanRight.style.fontSize = '35px';
+        spanRight.style.fontFamily = 'simsun';
+        spanRight.style.lineHeight = '80px';
+        spanRight.style.textAlign = 'center';
+        spanRight.style.cursor = 'pointer';
+        spanLeft.style.position = 'absolute';
+        spanLeft.style.left = '0px';
+        spanLeft.style.height = '80px';
+        spanLeft.style.width = '40px';
+        spanLeft.style.top = '50%';
+        spanLeft.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        spanLeft.style.zIndex = '10';
+        spanLeft.style.transform = 'translateY(-50%)'
+        spanLeft.style.display = 'none';
+        spanLeft.innerHTML = '<';
+        spanLeft.style.color = 'white';
+        spanLeft.style.fontSize = '35px';
+        spanLeft.style.fontFamily = 'simsun';
+        spanLeft.style.lineHeight = '80px';
+        spanLeft.style.textAlign = 'center';
+        spanLeft.style.cursor = 'pointer';
+        screen.appendChild(spanLeft);
+        screen.appendChild(spanRight);
+
+        var imgWidth = screen.offsetWidth;
+        var array = ['images/1.jpg', 'images/2.jpg', 'images/3.jpg', 'images/4.jpg'];
+
+        function createImgLi() {
+            var elemLi = document.createElement('li');
+            elemLi.style.height = screen.offsetHeight + 'px';
+            elemLi.style.width = screen.offsetWidth + 'px';
+            elemLi.style.float = 'left';
+            elemLi.style.position = 'relative';
+            this.elemLi = elemLi;
+        }
+
+        function createOlLi() {
+            var elemLi = document.createElement('li');
+            elemLi.style.height = '20px';
+            elemLi.style.width = '20px';
+            elemLi.style.float = 'left';
+            elemLi.style.borderRadius = '50%';
+            elemLi.style.border = '1px solid red'
+            elemLi.style.margin = '0 5px';
+            this.elemLi = elemLi;
+        }
+
+        function createImg(url) {
+            var img = document.createElement('img');
+            img.style.width = screen.offsetWidth + 'px';
+            img.style.height = screen.offsetHeight + 'px';
+            img.src = url;
+            this.img = img;
+        }
+
+        function createSpan(num) {
+            var span = document.createElement('span');
+            span.style.position = 'absolute';
+            span.innerHTML = num;
+            span.style.fontSize = '50px';
+            span.style.left = '50%';
+            span.style.top = '50%';
+            span.style.transform = 'translate(-50%,-50%)';
+            span.style.zIndex = '8';
+            span.style.color = 'red';
+            this.span = span;
+        }
+
+        for (var i = 0; i < array.length; i++) {
+            var elemLi = new createImgLi();
+            var img = new createImg(array[i]);
+            var span = new createSpan(i + 1);
+            elemLi.elemLi.appendChild(span.span);
+            elemLi.elemLi.appendChild(img.img);
+
+            elemUl.appendChild(elemLi.elemLi);
+            var elemOlLi = new createOlLi();
+            elemOlLi.elemLi.index = i;
+            elemOl.appendChild(elemOlLi.elemLi);
+            if (i === 0) {
+                var elemClone = elemLi.elemLi.cloneNode(true)//复制第一个元素
+                elemOlLi.elemLi.style.backgroundColor = 'rgba(100,200,100,0.5)';
+            }
+            if (i === array.length - 1) {
+                elemUl.appendChild(elemClone);
+            }
+        }
+
+        function animate(ele, target, speed) {
+            clearInterval(ele.timer);
+            ele.timer = setInterval(function () {
+                speed = ele.offsetLeft < target ? Math.abs(speed) : -Math.abs(speed);
+                ele.style.left = ele.offsetLeft + speed + 'px';
+                if (Math.abs(ele.offsetLeft - target) <= Math.abs(speed)) {
+                    ele.style.left = target + 'px';
+                    clearInterval(ele.timer);
+                }
+            }, 16)
+        }
+
+        var flagKey = 0;  //图片位置标记
+        var flagQuary = 0;  //低栏圆形索引标记
+
+        function autoMove() {
+            flagKey++;  //向右走加1
+            flagQuary++;  //向右走加1
+            if (array.length + 1 == flagKey) {
+                elemUl.style.left = '0px';
+                flagKey = 1;  //当图片移动到最后一张（即先前复制过去的第一张图片时）ul位置立即变为0，并移动到第二张图片
+            }
+            if (array.length == flagQuary) {
+                flagQuary = 0;  //低栏的索引值和除去复制过去的图片索引一致，因此最大为array.length-1;
+                                // 当移动到最后一张（即复制过去的那张图片）时，索引值变为0，其目的是为首位添加背景色
+            }
+            for (var i = 0; i < elemOl.children.length; i++) {
+                elemOl.children[i].style.backgroundColor = '';
+            }
+            elemOl.children[flagQuary].style.backgroundColor = 'rgba(100,200,100,0.5)';
+            var left = imgWidth * flagKey;
+            animate(elemUl, -left, 10);
+        }
+        /**
+         * 自动轮播
+         * */
+        var auto = setInterval(autoMove, 3000);
+        /**
+         * 右点击事件
+         * */
+        spanRight.onclick = autoMove;
+        /**
+         * 左点击事件
+         * */
+        spanLeft.onclick = function () {
+            flagKey--;  //向右走加1
+            flagQuary--;  //向右走加1
+            if (-1 == flagKey) {
+                elemUl.style.left = -imgWidth * array.length + 'px';
+                flagKey = array.length - 1;  //当图片移动到最后一张（即先前复制过去的第一张图片时）ul位置立即变为0，并移动到第二张图片
+            }
+            if (-1 == flagQuary) {
+                flagQuary = array.length - 1;  //低栏的索引值和除去复制过去的图片索引一致，因此最大为array.length-1;
+                // 当移动到最后一张（即复制过去的那张图片）时，索引值变为0，其目的是为首位添加背景色
+            }
+            for (var i = 0; i < elemOl.children.length; i++) {
+                elemOl.children[i].style.backgroundColor = '';
+            }
+            elemOl.children[flagQuary].style.backgroundColor = 'rgba(100,200,100,0.5)';
+            var left = imgWidth * flagKey;
+            animate(elemUl, -left, 10);
+        }
+        /**
+         * 鼠标移入事件
+         * @param flag
+         */
+        function mouseHover(flag) {
+            if ('over' === flag) {
+                spanRight.style.display = 'block';
+                spanLeft.style.display = 'block';
+                clearInterval(auto)
+            } else if ('out' === flag) {
+                spanRight.style.display = 'none';
+                spanLeft.style.display = 'none';
+                auto = setInterval(autoMove, 2000);
+            }
+        }
+
+        screen.onmouseover = function () {
+            mouseHover('over');
+        }
+        screen.onmouseout = function () {
+            mouseHover('out');
+        }
+        /**
+         * 低栏事件绑定
+         */
+        function bindOlLi() {
+            for (var i = 0; i < elemOl.children.length; i++) {
+                elemOl.children[i].onmouseover = function () {
+                    flagKey = flagQuary = this.index;
+                    for (var j = 0; j < elemOl.children.length; j++) {
+                        elemOl.children[j].style.backgroundColor = '';
+                    }
+                    elemOl.children[flagQuary].style.backgroundColor = 'rgba(100,200,100,0.5)';
+                    animate(elemUl, -flagKey * imgWidth, 10);
+                }
+            }
+        }
+        bindOlLi();
+    }
+</script>
+</body>
+</html>
