@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            /*background-color: #000000;*/
+            background-image: radial-gradient(
+                    200px 600px at center,#000,#ccc);
+        }
+
+        #box {
+            width: 1000px;
+            height: 80%;
+            /*border: 1px solid red;*/
+            perspective: 1000px;
+            margin: 50px auto;
+            transform-style: preserve-3d;
+        }
+
+        li {
+            position: absolute;
+            list-style: none;
+        }
+
+        img {
+            width: inherit;
+            height: inherit;
+        }
+
+    </style>
+    <script>
+        window.onload = function () {
+            var array = [
+                {left: '380px', top: '300px', width: '250px', height: '150px', zIndex: 10},
+                {
+                    left: '150px',
+                    top: '230px',
+                    width: '250px',
+                    height: '150px',
+                    transform: 'translateZ(-200px)',
+                    zIndex: 9
+                },
+                {
+                    left: '30px',
+                    top: '100px',
+                    width: '250px',
+                    height: '150px',
+                    transform: 'translateZ(-400px)',
+                    zIndex: 8
+                },
+                {
+                    left: '170px',
+                    top: '-15px',
+                    width: '250px',
+                    height: '150px',
+                    transform: 'translateZ(-600px)',
+                    zIndex: 7
+                },
+                {
+                    left: '385px',
+                    top: '-100px',
+                    width: '250px',
+                    height: '150px',
+                    transform: 'translateZ(-800px)',
+                    zIndex: 5
+                },
+                {
+                    left: '600px',
+                    top: '-15px',
+                    width: '250px',
+                    height: '150px',
+                    transform: 'translateZ(-600px)',
+                    zIndex: 7
+                },
+                {
+                    left: '720px',
+                    top: '100px',
+                    width: '250px',
+                    height: '150px',
+                    transform: 'translateZ(-400px)',
+                    zIndex: 8
+                },
+                {
+                    left: '610px',
+                    top: '230px',
+                    width: '250px',
+                    height: '150px',
+                    transform: 'translateZ(-200px)',
+                    zIndex: 9
+                }]
+            var li = document.getElementsByTagName('li');
+            for (var i = 0; i < li.length; i++) {
+                forStyle(li[i], array[i],true);
+            }
+            setInterval(function () {
+                var first = array.shift();
+                array.push(first);
+                for (var i = 0; i < li.length; i++) {
+                    forStyle(li[i], array[i]);
+                }
+            }, 3000)
+            function animate(ele, target, step) {
+                clearInterval(ele.timer)
+                ele.nowX = ele.offsetLeft;
+                ele.nowY = ele.offsetTop;
+                ele.targetX = parseInt(target.left);
+                ele.targetY = parseInt(target.top);
+                ele.speedX = Math.abs(ele.targetX - ele.nowX) / step;
+                ele.speedY = Math.abs(ele.targetY - ele.nowY) / step;
+                ele.speedX = ele.targetX > ele.nowX ? ele.speedX : -ele.speedX;
+                ele.speedY = ele.targetY > ele.nowY ? ele.speedY : -ele.speedY;
+                ele.timer = setInterval(function () {
+                    ele.style.left = ele.offsetLeft + ele.speedX + 'px';
+                    ele.style.top = ele.offsetTop + ele.speedY + 'px';
+                    if (Math.abs(ele.targetX - ele.offsetLeft) <= Math.abs(ele.speedX) || Math.abs(ele.targetY - ele.offsetTop) <= Math.abs(ele.speedY)) {
+                        ele.style.left = ele.targetX + 'px';
+                        ele.style.top = ele.targetY + 'px';
+                        clearInterval(ele.timer)
+                    }
+                }, 16)
+            }
+
+            function forStyle(elem, style,flag) {
+                if(flag){
+                    elem.style.left = style.left;
+                    elem.style.top = style.top;
+                }else {
+                    animate(elem,style,30);
+                }
+                elem.style.width = style.width;
+                elem.style.height = style.height;
+                elem.style.transform = style.transform;
+                elem.style.zIndex = style.zIndex;
+            }
+        }
+
+    </script>
+</head>
+<body>
+<div id="box">
+    <ul>
+        <li class="a1"><img class="a" src="images/cars.jpg"></li>
+        <li class="a2"><img class="b" src="images/walle.jpg"></li>
+        <li class="a3"><img class="c" src="images/rat.jpg"></li>
+        <li class="a4"><img class="d" src="images/toystory.jpg"></li>
+        <li class="a5"><img class="e" src="images/1.jpg"></li>
+        <li class="a6"><img class="f" src="images/2.jpg"></li>
+        <li class="a7"><img class="g" src="images/3.jpg"></li>
+        <li class="a8"><img class="h" src="images/4.jpg"></li>
+    </ul>
+</div>
+</body>
+</html>

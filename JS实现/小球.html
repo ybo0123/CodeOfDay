@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body, #screen {
+            height: 100%;
+            width: 100%;
+            /*overflow: hidden;*/
+            margin: 0;
+            padding: 0;
+        }
+
+        #screen {
+            background-color: #8AA8B3;
+            position: relative;
+        }
+
+        #ball {
+            width: 25px;
+            height: 25px;
+            background-color: #80ff45;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .ball {
+            width: 25px;
+            height: 25px;
+            background-color: #80ff45;
+            border-radius: 50%;
+            position: absolute;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var screen = document.getElementById('screen');
+            var ball = document.getElementById('ball');
+
+            function createBall() {
+                var elem = document.createElement('div');
+                elem.className = 'ball';
+                elem.style.backgroundColor = 'rgb(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ')';
+                this.elem = elem;
+
+            }
+
+            document.onclick = function (event) {
+                event = EventUtils.event(event);
+                var elem = new createBall();
+                screen.appendChild(elem.elem);
+                elem.animate.moveByMouse(elem.elem, event);
+            }
+            //封装事件兼容
+            var EventUtils = {
+                event: function (event) {
+                    return event ? event : window.event;
+                }
+            }
+            //动画效果
+            createBall.prototype.animate = {
+                moveByMouse: function (ele, event) {
+                    var eleX = 0;
+                    var eleY = 0;
+                    var mouseX = event.clientX;
+                    var mouseY = event.clientY;
+                    var eleW = ele.clientWidth;
+                    var eleH = ele.clientHeight;
+                    var eleParent = ele.parentNode;
+                    var parentW = eleParent.clientWidth;
+                    var parentH = eleParent.clientHeight;
+                    var speedX = 8 * mouseX / parentW;
+                    var speedY = 0;
+                    clearInterval(ele.timer);
+                    ele.timer = setInterval(function () {
+                        if (speedX <= 0 && speedY <= 0) {
+                            clearInterval(ele.timer);
+                            return;
+                        }
+                        eleX = ele.offsetLeft;
+                        eleY = ele.offsetTop;
+                        if (parentW - eleX - eleW < speedX) {
+                            ele.style.left = parentW - eleW + 'px';
+                        } else {
+                            ele.style.left = eleX + speedX + 'px';
+                        }
+                        if (parentH - eleY - eleH < speedY) {
+                            ele.style.top = parentH - eleH + 'px';
+                            speedY = -speedY / 3 * 2;
+
+                        } else {
+                            ele.style.top = eleY + speedY + 'px';
+                            speedY += 1;
+                        }
+                        if (Math.abs(parentH - eleY - eleH) <= 1 && Math.abs(speedY) <= 1) {
+                            ele.style.top = parentH - eleH + 'px';
+                            speedY = 0;
+                        }
+                        if (speedX >= 0.02) {
+                            speedX -= 0.02;
+                        }
+                    }, 16);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="screen">
+</div>
+</body>
+</html>
